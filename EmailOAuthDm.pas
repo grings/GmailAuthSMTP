@@ -39,7 +39,7 @@ uses
   , IdSASL
   , IdSASL.OAuth.Base
   , Email.Demo.Types
-  , windows
+  , Winapi.Windows
   , REST.Types
   , REST.Client
   , Data.Bind.Components
@@ -206,6 +206,7 @@ begin
   end;
   FOAuth2_Enhanced.AuthCode := LCode;
   FOAuth2_Enhanced.ChangeAuthCodeToAccesToken;
+
   LTokenName := Provider.AuthName + 'Token';
   FIniSettings.WriteString('Authentication', LTokenName, FOAuth2_Enhanced.RefreshToken);
   var jwt := TJWT.Create(FOAuth2_Enhanced.IDToken);
