@@ -6,7 +6,10 @@ uses
     System.SysUtils
   , System.Classes
   , System.JSON
+{$IFDEF MSWINDOWS}
   , Winapi.ShellAPI
+  , Winapi.Windows
+{$ENDIF}
   , IniFiles
   , REST.Authenticator.EnhancedOAuth
   , IdIntercept
@@ -39,7 +42,6 @@ uses
   , IdSASL
   , IdSASL.OAuth.Base
   , Email.Demo.Types
-  , Winapi.Windows
   , REST.Types
   , REST.Client
   , Data.Bind.Components
@@ -76,15 +78,19 @@ type
     FIniSettings : TIniFile;
     FIsAuthenticated : Boolean;
     procedure DoLog(const msg: String);
-    procedure ForceForegroundNoActivate(hWnd: THandle);
     procedure DeleteSASL(SASLMechanisms: TIdSASLEntries; xClass: TIdSASLOAuthBaseClass);
     procedure DeleteSASLOAuth;
+{$IFDEF MSWINDOWS}
+    procedure ForceForegroundNoActivate(hWnd: THandle);
+{$ENDIF}
   public
     { Public declarations }
     SendAddress : string;
     OnLog: TOnLog;
+{$IFDEF MSWINDOWS}
     HWNDHandle : HWND;
     AppHandle : HWND;
+{$ENDIF}
     SelectedProvider : Integer;
     Provider : TMailProviderInfo;
     function IsAuthenticated: Boolean;
@@ -143,14 +149,15 @@ uses
 const
   clientredirect = 'http://localhost:2132';
 
+{$IFDEF MSWINDOWS}
 procedure TEmailOAuthDataModule.ForceForegroundNoActivate(hWnd : THandle);
-
 begin
  if IsIconic(AppHandle) then
   ShowWindow(AppHandle, SW_SHOWNOACTIVATE);
  SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE or SWP_NOACTIVATE or SWP_NOMOVE);
  SetWindowPos(hWnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOSIZE or SWP_NOACTIVATE or SWP_NOMOVE);
 end;
+{$ENDIF}
 
 procedure TEmailOAuthDataModule.DataModuleCreate(Sender: TObject);
 var
